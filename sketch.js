@@ -63,7 +63,8 @@ function setup() {
 */
 function draw() {
     if (GAMEOVER) {
-        gameOverScreen()
+        gameOverScreen();
+        return;
     }
 
     // Update
