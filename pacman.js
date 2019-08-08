@@ -105,16 +105,13 @@ class Pacman {
             // pacman should eat berries
 
 
-            // check contact with a ghost
-
-
             // if pacman reaches the portal, he should come out the other side
 
 
             // check that in the current direction, pacman isn't running into a wall, if he is stop him
 
         }
-
+        // check contact with a ghost
 
     }
 
