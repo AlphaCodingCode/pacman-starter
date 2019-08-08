@@ -72,26 +72,16 @@ function draw() {
     for (let i = 0; i < ghosts.length; i++) {
         ghosts[i].update();
     }
+
     // Render
-    //background(0);
     tileset.displayMap();
     player.render();
     for (let i = 0; i < ghosts.length; i++) {
         ghosts[i].render();
     }
-
     // text score
     fill(255, 255, 255);
     textSize(30);
     stroke(0);
     text("Score: " + gameScore, 20, height - 20);
-}
-
-function gameOverScreen() {
-    background(0);
-    fill(255, 0, 0);
-    textSize(40);
-    textAlign(CENTER);
-    text("GAME OVER!", width / 2, height / 2);
-    return;
 }
