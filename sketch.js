@@ -85,3 +85,14 @@ function draw() {
     stroke(0);
     text("Score: " + gameScore, 20, height - 20);
 }
+
+function reverseDir(dir) {
+    if (dir == "up")
+        return "down";
+    if (dir == "down")
+        return "up";
+    if (dir == "left")
+        return "right";
+    if (dir == "right")
+        return "left";
+}
