@@ -92,8 +92,8 @@ class Pacman {
         if  ((this.x % tileset.tileW == 0) && (this.y % tileset.tileH == 0)) {
 
             // change pacman's direction if a new direction was inputted
-            if (this.dir != this.lastDir) {
-                let tile = this.getTileInDir(this.lastDir);
+            let tile = this.getTileInDir(this.lastDir);
+            if (tile.name != "brick") {
                 if (tileset.map[tile.r][tile.c].name != "brick") {
                     this.dir = this.lastDir;
                     // mouth facing direction needs to re-adjust to facing direction
@@ -127,7 +127,7 @@ class Pacman {
         } else {
             col++;
         }
-        return {c : col, r : row};
+        return tileset.map[col][row];
     }
 
     render() {

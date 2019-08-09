@@ -1,34 +1,40 @@
 class Ghost {
     constructor(col, row, color) {
+
+        // positional properties
         this.x = col * tileset.tileW;
         this.y = row * tileset.tileH;
+
+        // appearance properties
         this.color = color;
         this.blobDelta = 0;
         this.blobDir = 0.1;
+
+        // movement related properties
         this.dir = "left";
         this.speed = 2;
         this.path = [];
-        this.lastDir = null;
+
+        // ghost behaviour properties
         this.mode = "scatter";
-        this.possibleModes = ["scatter", "chase", "frightened"];
         this.stateCD = 60 * 3;
         this.vulnerable = false;
         this.vulnerableTimer = 5 * 60;
     }
 
-    randomPathAI() {
+    pickTileAtIntersection() {
         // if the ghost reached an intersection decide to change direction to a random direction
         let openSpaces = [];
         let dirs = ["up", "down", "left", "right"];
         for (let i = 0; i < dirs.length; i++) {
             let tile = this.getTileInDir(dirs[i]);
-            if (tileset.map[tile.r][tile.c].name != "brick")
+            if (tile.name != "brick")
                 openSpaces.push(dirs[i]);
         }
 
         // get rid of opposite direction from candidates
-        if (openSpaces.indexOf(this.reverseDir(this.dir)) != -1)
-            openSpaces.splice(openSpaces.indexOf(this.reverseDir(this.dir)), 1);
+        if (openSpaces.indexOf(reverseDir(this.dir)) != -1)
+            openSpaces.splice(openSpaces.indexOf(reverseDir(this.dir)), 1);
 
         if (openSpaces.length > 0) {
             let rand = round(random(0, openSpaces.length - 1));
@@ -38,6 +44,10 @@ class Ghost {
     }
 
     scatter() {
+        return;
+    }
+
+    chase() {
         return;
     }
 
@@ -86,17 +96,6 @@ class Ghost {
         }
     }
 
-    reverseDir(dir) {
-        if (dir == "up")
-            return "down";
-        if (dir == "down")
-            return "up";
-        if (dir == "left")
-            return "right";
-        if (dir == "right")
-            return "left";
-    }
-
     getTileInDir(dir) {
         let col = this.x / tileset.tileW;
         let row = this.y / tileset.tileH;
@@ -109,7 +108,7 @@ class Ghost {
         } else {
             col++;
         }
-        return {c : col, r : row};
+        return tileset.map[col][row];
     }
 
     takePortal() {
@@ -126,28 +125,6 @@ class Ghost {
             return true;
         }
         return false;
-    }
-
-    newTileEntered() {
-        if (this.takePortal())
-            return;
-
-        // apply the AI path
-        this.randomPathAI();
-        // check that in the current direction, ghost isn't running into a wall, if he is change dir
-        let tile = this.getTileInDir(this.dir);
-        if (tileset.map[tile.r][tile.c].name == "brick") {
-            this.speed = 2;
-            let dirs = ["left", "right", "down", "up"];
-            while (true) {
-                let index = round(random(0, dirs.length - 1));
-                tile = this.getTileInDir(dirs[index]);
-                if (tileset.map[tile.r][tile.c].name != "brick") {
-                    this.dir = dirs[index];
-                    break;
-                }
-            }
-        }
     }
 
     updateFeetDir() {
@@ -182,7 +159,25 @@ class Ghost {
                     this.vulnerableTimer = 5 * 60;
                     this.path = [];
                 }
-                this.newTileEntered();
+                if (this.takePortal())
+                    return;
+
+                // apply the AI path
+                this.pickTileAtIntersection();
+                // check that in the current direction, ghost isn't running into a wall, if he is change dir
+                let tile = this.getTileInDir(this.dir);
+                if (tile.name == "brick") {
+                    this.speed = 2;
+                    let dirs = ["left", "right", "down", "up"];
+                    while (true) {
+                        let index = round(random(0, dirs.length - 1));
+                        tile = this.getTileInDir(dirs[index]);
+                        if (tile.name != "brick") {
+                            this.dir = dirs[index];
+                            break;
+                        }
+                    }
+                }
             }
         } else {
             this.updateFeetDir();
@@ -261,7 +256,6 @@ class Blinky extends Ghost {
     Blinky(Red) is an aggressive ghost. It follows the player around precisely.
     */
 
-    
 }
 
 
